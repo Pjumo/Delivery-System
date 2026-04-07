@@ -7,7 +7,7 @@ extern void i2c_start(void);
 extern void i2c_write(uint8_t data);
 extern void i2c_stop(void);
 
-static uint8_t backlight_state = 0;
+static uint8_t backlight_state = 1;
 
 static void lcd_write_pcf8574(uint8_t data) {
     i2c_start();
