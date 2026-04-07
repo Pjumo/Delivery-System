@@ -7,15 +7,13 @@
 #include <util/delay.h>
 
 // 음계 정의
-#define NOTE_E5  659
-#define NOTE_DS5 622
-#define NOTE_B4  494
-#define NOTE_D5  587
-#define NOTE_C5  523
-#define NOTE_A4  440
+#define NOTE_G5  1568
+#define NOTE_GS5 1661
+#define NOTE_AS5 1865
+#define NOTE_CS6 2217
 
 // 박자 정의 (ms)
-#define T_MELODY 160
+#define T_MELODY 230
 #define T_PAUSE  50
 
 // 부저 연결 핀: PB4 (Digital 12)

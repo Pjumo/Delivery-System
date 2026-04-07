@@ -8,8 +8,7 @@
 #include "i2c.h"
 #include "lcd1602_i2c.h"
 #include "buzzer.h"
-
-#define LED_PIN PB5
+#include "servo.h"
 
 typedef enum {
     STATE_WAIT_DELIVERY,
@@ -63,9 +62,7 @@ int main(void) {
     keypad_init();
     ir_init();
     buzzer_init();
-
-    DDRB |= (1 << LED_PIN);
-    PORTB &= ~(1 << LED_PIN);
+    servo_init();
 
     // 초기 상태 표시
     display_standby();
@@ -84,7 +81,6 @@ int main(void) {
             else if (kp_key == '#') {
                 if (input_idx == 4) {
                     current_state = STATE_LOCKED;
-                    PORTB |= (1 << LED_PIN);
                     display_locked(); // LCD 상태 변경
 
                     play_delivery_done();
@@ -117,7 +113,8 @@ int main(void) {
             else if (cmd == 0x90) { // EQUAL 버튼
                 if (strcmp(input_buffer, password) == 0) {
                     current_state = STATE_WAIT_DELIVERY;
-                    PORTB &= ~(1 << LED_PIN);
+
+                    servo_write(180);
                     
                     // 수령 완료 메시지
                     lcd_clear();
@@ -126,12 +123,14 @@ int main(void) {
                     printf("\r\n[Success] Receipt completed!\r\n");
                     
                     _delay_ms(2000); // 2초 대기
+
+                    servo_write(0);
                     display_standby(); // 다시 대기 상태로
                     memset(password, 0, sizeof(password));
                 } else {
                     lcd_gotoxy(5, 1);
                     lcd_print("Error!    "); // 기존 비번 가리기
-                    printf("/r/n");
+                    printf("\r\n");
                     _delay_ms(1000);
                     display_locked(); // 다시 비번 입력 대기 화면
                 }
